@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SQL / PSQL Query Generator</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>SQL / PSQL Query Generator</h1>
+    <p class="subtitle">
+      Generate safe <code>INSERT</code> and <code>UPDATE</code> queries from table metadata and row JSON.
+    </p>
+
+    <section class="card">
+      <label for="queryType">Query type</label>
+      <select id="queryType">
+        <option value="insert">INSERT</option>
+        <option value="update">UPDATE</option>
+      </select>
+
+      <label for="tableName">Table name</label>
+      <input id="tableName" placeholder="public.users" />
+
+      <label for="tableStructure">Table structure</label>
+      <textarea id="tableStructure" rows="9" spellcheck="false"></textarea>
+      <p class="hint">
+        JSON format (recommended):
+        <code>[{"name":"id","type":"int","primaryKey":true},{"name":"email","type":"text"}]</code>
+      </p>
+      <p class="hint">
+        Or line format:
+        <code>id:int:pk</code>, <code>email:text</code>, <code>is_active:boolean</code>
+      </p>
+
+      <label for="rowsInput">Row / rows (JSON)</label>
+      <textarea id="rowsInput" rows="10" spellcheck="false"></textarea>
+      <p class="hint">
+        Single row object or array of row objects.
+      </p>
+
+      <div class="actions">
+        <button id="sampleBtn" type="button">Load sample</button>
+        <button id="generateBtn" type="button">Generate query</button>
+      </div>
+
+      <label for="outputQuery">Output query</label>
+      <textarea id="outputQuery" rows="12" readonly spellcheck="false"></textarea>
+      <div class="actions">
+        <button id="copyBtn" type="button">Copy query</button>
+      </div>
+
+      <p id="status" class="status"></p>
+    </section>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>
