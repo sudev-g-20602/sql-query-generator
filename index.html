@@ -3,45 +3,58 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SQL / PSQL Query Generator</title>
+  <title>SQL INSERT Query Generator</title>
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
   <main class="container">
-    <h1>SQL / PSQL Query Generator</h1>
+    <h1>SQL INSERT Query Generator</h1>
     <p class="subtitle">
-      Generate safe <code>INSERT</code> and <code>UPDATE</code> queries from table metadata and row JSON.
+      Generate safe <code>INSERT</code> queries from table metadata and row input.
     </p>
 
     <section class="card">
       <label for="queryType">Query type</label>
-      <select id="queryType">
-        <option value="insert">INSERT</option>
-        <option value="update">UPDATE</option>
+      <input id="queryType" value="INSERT" readonly />
+
+      <label for="dialectType">Database type</label>
+      <select id="dialectType">
+        <option value="postgresql" selected>PostgreSQL</option>
+        <option value="mysql">MySQL</option>
       </select>
 
       <label for="tableName">Table name</label>
-      <input id="tableName" placeholder="public.users" />
+      <input id="tableName" list="tableNameHistory" placeholder="public.users" />
+      <datalist id="tableNameHistory"></datalist>
 
       <label for="tableStructure">Table structure</label>
       <textarea id="tableStructure" rows="9" spellcheck="false"></textarea>
+      <p class="hint">Previously used structures</p>
+      <div id="tableStructureSuggestions" class="suggestions"></div>
       <p class="hint">
-        JSON format (recommended):
-        <code>[{"name":"id","type":"int","primaryKey":true},{"name":"email","type":"text"}]</code>
+        Accepted formats (table structure):
+        <code>column1 column2 column3 column4</code> (space/tab separated)
       </p>
       <p class="hint">
-        Or line format:
-        <code>id:int:pk</code>, <code>email:text</code>, <code>is_active:boolean</code>
+        <code>RECORDID</code>, <code>RECORDNAME</code>, <code>RECORDMODULE</code> (one per line)
+      </p>
+      <p class="hint">
+        Optional typed format:
+        <code>id:bigint:pk</code>, <code>name:text</code>, <code>metadata:jsonb</code>
       </p>
 
-      <label for="rowsInput">Row / rows (JSON)</label>
+      <label for="rowsInput">Row / rows input</label>
       <textarea id="rowsInput" rows="10" spellcheck="false"></textarea>
       <p class="hint">
-        Single row object or array of row objects.
+        Accepted formats (rows; values must follow table-column order):
+        one value per line for a single row.
+      </p>
+      <p class="hint">
+        Multiple rows: add a blank line between row blocks, or use tab-separated rows
+        (one row per line).
       </p>
 
       <div class="actions">
-        <button id="sampleBtn" type="button">Load sample</button>
         <button id="generateBtn" type="button">Generate query</button>
       </div>
 

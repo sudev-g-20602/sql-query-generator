@@ -65,6 +65,30 @@ textarea {
   font-size: 13px;
 }
 
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.suggestion-chip {
+  border: 1px solid #c5ccda;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #1f2a37;
+  padding: 6px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.suggestion-chip:hover {
+  background: #e0e7ff;
+}
+
 .actions {
   display: flex;
   gap: 10px;

@@ -1,18 +1,18 @@
-# SQL / PSQL Query Generator
+# SQL INSERT Query Generator
 
-Small browser app to generate PostgreSQL-friendly `INSERT` or `UPDATE` queries from:
+Small browser app to generate `INSERT` queries for PostgreSQL or MySQL from:
 
 - table name
 - table structure
-- row or rows JSON
+- row values in plain text (newline/tab format)
 
 ## Features
 
 - Generate multi-row `INSERT INTO ... VALUES ...`
-- Generate one or many `UPDATE ... SET ... WHERE ...`
-- Accept table structure in JSON or line format
+- Choose database type: `PostgreSQL` (default) or `MySQL`
+- Accept table structure in JSON, `name:type[:pk]` line format, or plain column names (space/newline separated)
 - Basic SQL escaping for strings
-- JSON/JSONB value casting support
+- PostgreSQL JSON/JSONB value casting support
 
 ## Run locally
 
@@ -53,28 +53,49 @@ is_active:boolean
 metadata:jsonb
 ```
 
+Column names only:
+
+```txt
+id email is_active metadata
+```
+
+or:
+
+```txt
+id
+email
+is_active
+metadata
+```
+
 ### 3) Row / Rows
 
-Single row:
+Single row (one value per line, in the same order as table structure):
 
-```json
-{ "id": 1, "email": "a@example.com", "is_active": true }
+```txt
+1
+a@example.com
+true
 ```
 
-Multiple rows:
+Multiple rows (add a blank line between row blocks):
 
-```json
-[
-  { "id": 1, "email": "a@example.com", "is_active": true },
-  { "id": 2, "email": "b@example.com", "is_active": false }
-]
+```txt
+1
+a@example.com
+true
+
+2
+b@example.com
+false
 ```
 
-## Notes for UPDATE
+Tab-separated rows (one row per line) are also supported:
 
-- If `primaryKey: true` is set in table structure, those columns are used in `WHERE`.
-- If no primary key is marked, it tries to use `id`.
-- At least one non-key column must be present for `SET`.
+```txt
+1	a@example.com	true
+2	b@example.com	false
+```
 
 ## Add to git
 
@@ -82,7 +103,7 @@ From repo root:
 
 ```bash
 git add tools/sql-query-generator
-git commit -m "Add browser app to generate INSERT/UPDATE SQL queries"
+git commit -m "Add browser app to generate INSERT SQL queries"
 ```
 
 Then push to your remote branch/repo.
