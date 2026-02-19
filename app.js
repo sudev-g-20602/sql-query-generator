@@ -1,5 +1,6 @@
 "use strict";
 
+const queryTypeEl = document.getElementById("queryType");
 const dialectTypeEl = document.getElementById("dialectType");
 const tableNameEl = document.getElementById("tableName");
 const tableStructureEl = document.getElementById("tableStructure");
@@ -442,9 +443,29 @@ function pickKeyColumns(structure, row) {
     );
   }
 
-  const fallback = structure.find((column) => column.name === "id");
-  if (fallback && Object.prototype.hasOwnProperty.call(row, "id")) {
-    return [fallback];
+  const idNamedColumn = structure.find(
+    (column) =>
+      column.name.trim().toLowerCase() === "id" &&
+      Object.prototype.hasOwnProperty.call(row, column.name)
+  );
+  if (idNamedColumn) {
+    return [idNamedColumn];
+  }
+
+  const idLikeColumn = structure.find(
+    (column) =>
+      /id$/i.test(column.name.trim()) &&
+      Object.prototype.hasOwnProperty.call(row, column.name)
+  );
+  if (idLikeColumn) {
+    return [idLikeColumn];
+  }
+
+  const firstAvailableColumn = structure.find((column) =>
+    Object.prototype.hasOwnProperty.call(row, column.name)
+  );
+  if (firstAvailableColumn) {
+    return [firstAvailableColumn];
   }
 
   return [];
@@ -493,6 +514,7 @@ function buildUpdateQuery(tableName, structure, rows, dialect) {
 
 function generate() {
   try {
+    const queryType = queryTypeEl && queryTypeEl.value === "update" ? "update" : "insert";
     const dialect = dialectTypeEl && dialectTypeEl.value === "mysql" ? "mysql" : "postgresql";
     const tableName = tableNameEl.value.trim();
     if (!tableName) {
@@ -501,7 +523,10 @@ function generate() {
 
     const structure = parseStructure(tableStructureEl.value);
     const rows = parseRows(rowsInputEl.value, structure);
-    const query = buildInsertQuery(tableName, structure, rows, dialect);
+    const query =
+      queryType === "update"
+        ? buildUpdateQuery(tableName, structure, rows, dialect)
+        : buildInsertQuery(tableName, structure, rows, dialect);
 
     outputQueryEl.value = query;
     rememberTableName(tableName);

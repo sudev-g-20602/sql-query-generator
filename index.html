@@ -15,7 +15,10 @@
 
     <section class="card">
       <label for="queryType">Query type</label>
-      <input id="queryType" value="INSERT" readonly />
+      <select id="queryType">
+        <option value="insert" selected>INSERT</option>
+        <option value="update">UPDATE</option>
+      </select>
 
       <label for="dialectType">Database type</label>
       <select id="dialectType">
